@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowbite Flask</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}">
+</head>
+
+<body>
+    <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded-sm dark:bg-gray-900">
+        <div class="container flex flex-wrap items-center justify-between mx-auto">
+            <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                <img src="{{ url_for('static', filename='img/pizza.png') }}" alt="Logo" class="h-8">
+                <span class="text-xl font-bold text-gray-900 dark:text-white">Pizzería</span>
+            </a>
+
+            {% if current_user.is_authenticated %}
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
+                <ul
+                    class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+
+                    <!--  usuarios que no es admin -->
+                    <li><a href="{{ url_for('buscarPedidos') }}"
+                            class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 dark:text-white">Buscar
+                            pedidos</a></li>
+
+                    <!-- admin -->
+                    {% if current_user.rol == 'admin' %}
+                    <li><a href="{{ url_for('index') }}"
+                            class="block py-2 pl-3 pr-4 text-white bg-green-700 rounded-sm md:bg-transparent md:text-green-700 md:p-0 dark:text-white">Administrar</a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <form action="{{ url_for('logout') }}" method="POST">
+                            <button type="submit"
+                                class="block py-2 pl-3 pr-4 text-white bg-red-700 rounded-sm md:bg-transparent md:text-red-700 md:p-0 dark:text-white">Cerrar
+                                sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+
+
+
+    <div class="flex items-center justify-center min-h-screen">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div id="alert"
+            class="fixed top-4 right-4 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+            role="alert">
+            <span class="font-medium">{{ message }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block container %}
+        {% endblock %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var alert = document.getElementById('alert');
+
+            if (alert) {
+                setTimeout(function () {
+                    alert.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+
+</html>

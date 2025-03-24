@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block container %}
+
+<div class="relative overflow-x-auto" style="margin-top: 6%">
+    <form method="GET" action="{{ url_for('buscarPedidos') }}" class="mb-4">
+        <label for="fecha" class="block text-gray-700">Buscar por Fecha:</label>
+        <input type="date" id="fecha" name="fecha" class="p-2 border rounded" placeholder="yyyy-mm-dd">
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Buscar</button>
+    </form>
+
+    {% if pedidos %}
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">Cliente</th>
+                <th scope="col" class="px-6 py-3">Teléfono</th>
+                <th scope="col" class="px-6 py-3">Dirección</th>
+                <th scope="col" class="px-6 py-3">Tamaño de Pizza</th>
+                <th scope="col" class="px-6 py-3">Ingredientes</th>
+                <th scope="col" class="px-6 py-3">Número de Pizzas</th>
+                <th scope="col" class="px-6 py-3">Fecha del Pedido</th>
+                <th scope="col" class="px-6 py-3">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ pedido.cliente.nombre }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ pedido.cliente.telefono }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ pedido.cliente.direccion }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ pedido.tamanoPizza }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ pedido.ingredientes }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ pedido.numPizzas }}
+                </td>
+                <td class="px-6 py-4">
+                    {% if pedido.fechaPedido is string %}
+                    {{ pedido.fechaPedido }}
+                    {% else %}
+                    {{ pedido.fechaPedido.strftime('%d-%m-%Y') }}
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    ${{ pedido.total }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No se encontraron pedidos para la fecha seleccionada.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
